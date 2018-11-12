@@ -1,5 +1,5 @@
-# { pkgs ? import <nixpkgs> {} }:
-{ stdenv, fetchurl, unzip }:
+{ cfg, pkgs ? import <nixpkgs> {} }:
+# { cfg, stdenv, fetchurl, unzip }:
 
 let
   release = "0.17";
@@ -16,18 +16,23 @@ let
       sha256 = "18mlp3zqg33l4h5rhk41alj1yl8q3vg4vab09qf6hy551p3f2y1m";
     };
   };
-in 
-  stdenv.mkDerivation rec {
-    name = "funkwhale";
-    version = "${release}";
-    src = srcs.frontend;
-    buildInputs = [ unzip ];
-
+  config = (import ./config.nix) { inherit cfg; };
+  python = import ./requirements.nix { inherit pkgs; };
+in python.mkDerivation {
+# in stdenv.mkDerivation rec {
+  name = "funkwhale";
+  version = "${release}";
+  src = srcs.api;
+  buildInputs = [ pkgs.unzip ];
+  propagatedBuildInputs = [
+    python.packages."Django"
+    python.packages."python"
+# ...
+  ];
   installPhase = ''
     mkdir $out
     cp -R ./* $out
-
-    mkdir $out/api
-    unzip ${srcs.api} -d $out/api
+    mkdir $out/front
+    unzip ${srcs.frontend} -d $out/front
     '';
   }
