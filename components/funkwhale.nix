@@ -174,7 +174,11 @@ in
       recommendedOptimisation = true;
       recommendedGzipSettings = true;
       recommendedProxySettings = true;
-      clientMaxBodySize = "30M";
+      appendHttpConfig = ''
+        upstream funkwhale-api {
+          server ${cfg.api_ip}:${cfg.api_port};
+        }
+      '';
       virtualHosts = {
         "${cfg.hostname}" = {
         # enableACME = true; #Ask Let's Encrypt to sign a certificate for this vhost
@@ -216,7 +220,7 @@ in
       systemd.services = 
         let serviceConfig = {
             User = "funkwhale";
-            WorkingDirectory = "${funkwhalePkg}/api";
+            # WorkingDirectory = "${funkwhalePkg}/api";
           };
         in {
         "funkwhale.target" = {
