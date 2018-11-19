@@ -17,19 +17,12 @@ let
       sha256 = "18mlp3zqg33l4h5rhk41alj1yl8q3vg4vab09qf6hy551p3f2y1m";
     };
   };
-  python = import ../requirements.nix { inherit pkgs; };
-# in python.mkDerivation {
 in stdenv.mkDerivation {
-# in stdenv.mkDerivation rec {
   name = "funkwhale";
   version = "${release}";
   src = srcs.api;
   buildInputs = [ pkgs.unzip ];
-  propagatedBuildInputs = [
-    # python
-    python.packages."Django"
-# ...
-  ];
+  propagatedBuildInputs = [ ];
   installPhase = ''
     mkdir $out
     cp -R ./* $out

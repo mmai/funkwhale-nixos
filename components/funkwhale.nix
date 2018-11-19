@@ -4,10 +4,7 @@ with lib;
 
 let
   cfg = config.services.funkwhale;
-  # funkwhalePkg = (import ../packages/funkwhale.nix) { cfg = cfg; stdenv=stdenv; fetchurl=fetchurl; unzip=unzip; };
-  # funkwhalePkg = (import ../packages/funkwhale.nix) { inherit cfg pkgs; };
   funkwhalePkg = (import ../packages/funkwhale.nix) { pkgs = pkgs; cfg = cfg; };
-  # python = import ./requirements.nix { inherit pkgs; };
   funkwhaleEnv = {
     STATIC_ROOT = "${cfg.api.static_root}";
     MEDIA_ROOT = "${cfg.api.media_root}";
@@ -18,6 +15,7 @@ let
   };
 in 
 { 
+
   options = {
     services.funkwhale = {
       enable = mkEnableOption "funkwhale";
@@ -239,9 +237,9 @@ in
             mkdir -p ${cfg.api.static_root}
             chown -R funkwhale ${cfg.api.static_root}
 
-            python ${funkwhalePkg}/api/manage.py migrate
-            python ${funkwhalePkg}/api/manage.py createsuperuser
-            python ${funkwhalePkg}/api/manage.py collectstatic
+            ${pkgs.python36Packages.python}/bin/python ${funkwhalePkg}/manage.py migrate
+            ${pkgs.python36Packages.python}/bin/python ${funkwhalePkg}/manage.py createsuperuser
+            ${pkgs.python36Packages.python}/bin/python ${funkwhalePkg}/manage.py collectstatic
             fi
           '';
         };
