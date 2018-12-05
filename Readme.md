@@ -1,5 +1,12 @@
 # Funkwhale on NixOS
 
+0. Set the correct nix-channel
+
+```bash
+nix-channel --add  https://nixos.org/channels/nixos-18.09 nixpkgs
+nix-channel --update
+```
+
 1. Installation de l'outil de déploiement NixOps
 
 ```bash
@@ -18,7 +25,7 @@ nixops create ./deploy/logical.nix ./deploy/physical/virtualbox.nix -d funkwhale
 
 Pour obtenir la liste des déploiements configurés :
 ```
-nixpos list
+nixops list
 ```
 
 Déployer :
