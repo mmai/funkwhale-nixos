@@ -26,7 +26,6 @@ in stdenv.mkDerivation {
   installPhase = ''
     mkdir $out
     cp -R ./* $out
-    mkdir $out/front
-    unzip ${srcs.frontend} -d $out/front
+    unzip ${srcs.frontend} -d $out
     '';
   }

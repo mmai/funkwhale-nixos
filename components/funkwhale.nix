@@ -6,6 +6,7 @@ let
   cfg = config.services.funkwhale;
   funkwhalePkg = (import ../packages/funkwhale.nix) { pkgs = pkgs; cfg = cfg; };
   funkwhaleEnv = {
+    FUNKWHALE_URL = "${cfg.hostname}";
     STATIC_ROOT = "${cfg.api.static_root}";
     MEDIA_ROOT = "${cfg.api.media_root}";
     DATABASE_URL = "${cfg.api.database_url}";
@@ -218,6 +219,7 @@ in
       systemd.services = 
         let serviceConfig = {
             User = "funkwhale";
+            WorkingDirectory = "${funkwhalePkg}";
             # WorkingDirectory = "${funkwhalePkg}/api";
           };
         in {
@@ -251,7 +253,7 @@ in
 
           serviceConfig = serviceConfig;
           environment = funkwhaleEnv;
-          script = "${funkwhalePkg}.daphne -b ${cfg.api_ip} -p ${cfg.api_port} config.asgi:application --proxy-headers";
+          script = "${pkgs.python36Packages.daphne}/bin/daphne -b ${cfg.api_ip} -p ${cfg.api_port} config.asgi:application --proxy-headers";
 
           wantedBy = [ "multi-user.target" ];
         };
@@ -263,7 +265,7 @@ in
 
           serviceConfig = serviceConfig;
           environment = funkwhaleEnv;
-          script = "${funkwhalePkg}.celery -A funkwhale_api.taskapp worker -l INFO";
+          script = "${pkgs.python36Packages.celery}/bin/celery -A funkwhale_api.taskapp worker -l INFO";
 
           wantedBy = [ "multi-user.target" ];
         };
@@ -275,7 +277,7 @@ in
 
           serviceConfig = serviceConfig;
           environment = funkwhaleEnv;
-          script = "${funkwhalePkg}.celery -A funkwhale_api.taskapp beat -l INFO";
+          script = "${pkgs.python36Packages.celery}/bin/celery -A funkwhale_api.taskapp beat -l INFO";
 
           wantedBy = [ "multi-user.target" ];
         };
