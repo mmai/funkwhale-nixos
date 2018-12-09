@@ -35,6 +35,10 @@ let
    python36Packages.pytestrunner
     python36Packages.python
     python36Packages.django_2_0
+    # python36Packages.django-allauth
+    # python36Packages.django_environ
+    # python36Packages.django_redis
+    # python36Packages.djangorestframework
     python36Packages.automat
     python36Packages.markdown
     python36Packages.pyhamcrest
@@ -54,14 +58,12 @@ let
     python36Packages.celery
     python36Packages.certifi
     python36Packages.cffi
-    python36Packages.channels
     python36Packages.chardet
     python36Packages.constantly
     python36Packages.cryptography
     python36Packages.daphne
     python36Packages.decorator
     python36Packages.defusedxml
-    python36Packages.django-allauth
     python36Packages.future
     python36Packages.httplib2
     python36Packages.hyperlink
@@ -93,7 +95,6 @@ let
     python36Packages.requests
     python36Packages.rsa
     python36Packages.simplegeneric
-    python36Packages.six
     python36Packages.traitlets
     python36Packages.txaio
     python36Packages.uritemplate
@@ -102,9 +103,6 @@ let
     python36Packages.wcwidth
     python36Packages.whitenoise
     python36Packages.youtube-dl
-    python36Packages.django_environ
-    python36Packages.django_redis
-    python36Packages.djangorestframework
     python36Packages.google_api_python_client
     python36Packages.ipython_genutils
     python36Packages.prompt_toolkit
@@ -271,20 +269,6 @@ let
       };
     };
 
-    "django-rest-auth" = python.mkDerivation {
-      name = "django-rest-auth-0.9.3";
-      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/d3/21/059f2b44e0e4dc21a63f7d4095e7f22b159117de6bc38732813516aab2f9/django-rest-auth-0.9.3.tar.gz"; sha256 = "ad155a0ed1061b32e3e46c9b25686e397644fd6acfd35d5c03bc6b9d2fc6c82a"; };
-      doCheck = commonDoCheck;
-      buildInputs = commonBuildInputs;
-      propagatedBuildInputs = [
-    ];
-      meta = with pkgs.stdenv.lib; {
-        homepage = "http://github.com/Tivix/django-rest-auth";
-        license = "";
-        description = "Create a set of REST API endpoints for Authentication and Registration";
-      };
-    };
-
     # "Pillow" = python.mkDerivation {
     #   name = "Pillow-4.3.0";
     #   src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/e0/82/ec499c78bfe4ecaa91c2f3000040451d187ed0a816d58b8543e29c48827f/Pillow-4.3.0.tar.gz"; sha256 = "a97c715d44efd5b4aa8d739b8fad88b93ed79f1b33fc2822d5802043f3b1b527"; };
@@ -435,6 +419,102 @@ let
         description = "django-taggit is a reusable Django application for simple tagging.";
       };
     };
+
+    "django-allauth" = python.mkDerivation {
+      name = "django-allauth-0.36.0";
+      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/28/86/186141ba1aa5eb98bb73ad7c010c1ce7d986f3c40655536ab156b36a2847/django-allauth-0.36.0.tar.gz"; sha256 = "7d9646e3560279d6294ebb4c361fef829708d106da697658cf158bf2ca57b474"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [
+    ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "http://github.com/pennersr/django-allauth";
+        license = licenses.mit;
+        description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication.";
+      };
+    };
+
+    "django-environ" = python.mkDerivation {
+      name = "django-environ-0.4.5";
+      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/a5/b4/22015ec543bc33a68885eb1244d7928d851d7430d30372fb2c046a65e947/django-environ-0.4.5.tar.gz"; sha256 = "6c9d87660142608f63ec7d5ce5564c49b603ea8ff25da595fd6098f6dc82afde"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [ ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "https://github.com/joke2k/django-environ";
+        license = licenses.mit;
+        description = "Django-environ allows you to utilize 12factor inspired environment variables to configure your Django application.";
+      };
+    };
+
+    "django-redis" = python.mkDerivation {
+      name = "django-redis-4.5.0";
+      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/70/5b/0aee365b8a54fbbf978121f10a374d3eed31e2502a0fbf14933f837dad53/django-redis-4.5.0.tar.gz"; sha256 = "57dfc7300fde5a091c63996b0b2bacdd3752fe37678c5a6eafe0b5cac35c0d9c"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [
+    ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "https://github.com/niwibe/django-redis";
+        license = licenses.bsdOriginal;
+        description = "Full featured redis cache backend for Django.";
+      };
+    };
+
+    "djangorestframework" = python.mkDerivation {
+      name = "djangorestframework-3.7.7";
+      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/6b/e0/e63919a37d0df8994cf97df19bffd6137957120b30915e6d57aa80e5408e/djangorestframework-3.7.7.tar.gz"; sha256 = "9f9e94e8d22b100ed3a43cee8c47a7ff7b185e778a1f2da9ec5c73fc4e081b87"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [ ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "http://www.django-rest-framework.org";
+        license = licenses.bsdOriginal;
+        description = "Web APIs for Django, made easy.";
+      };
+    };
+
+    "django-rest-auth" = python.mkDerivation {
+      name = "django-rest-auth-0.9.3";
+      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/d3/21/059f2b44e0e4dc21a63f7d4095e7f22b159117de6bc38732813516aab2f9/django-rest-auth-0.9.3.tar.gz"; sha256 = "ad155a0ed1061b32e3e46c9b25686e397644fd6acfd35d5c03bc6b9d2fc6c82a"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [
+    ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "http://github.com/Tivix/django-rest-auth";
+        license = "";
+        description = "Create a set of REST API endpoints for Authentication and Registration";
+      };
+    };
+
+    "channels" = python.mkDerivation {
+      name = "channels-2.0.2";
+      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/09/9b/61075a16af435d9a70d8b5cd2663ed63c8ba1eac29d355e55ed9e3455175/channels-2.0.2.tar.gz"; sha256 = "5d41e0f2aa40f9755f36c2c1dd83748b6793732190d577922e06294a3b37fd92"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [
+    ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "http://github.com/django/channels";
+        license = licenses.bsdOriginal;
+        description = "Brings async, event-driven capabilities to Django. Django 1.11 and up only.";
+      };
+    };
+
+    "six" = python.mkDerivation {
+      name = "six-1.11.0";
+      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/16/d8/bc6316cf98419719bd59c91742194c111b6f2e85abac88e496adefaf7afe/six-1.11.0.tar.gz"; sha256 = "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [ ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "http://pypi.python.org/pypi/six/";
+        license = licenses.mit;
+        description = "Python 2 and 3 compatibility utilities";
+      };
+    };
+
 
 
 
