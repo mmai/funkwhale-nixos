@@ -23,20 +23,18 @@ let
       self: super: {
         bootstrapped-pip = super.bootstrapped-pip.overrideDerivation (old: {
           patchPhase = old.patchPhase + ''
-            sed -i               -e "s|paths_to_remove.remove(auto_confirm)|#paths_to_remove.remove(auto_confirm)|"                -e "s|self.uninstalled = paths_to_remove|#self.uninstalled = paths_to_remove|"                  $out/${pkgs.python35.sitePackages}/pip/req/req_install.py
+            sed -i               -e "s|paths_to_remove.remove(auto_confirm)|#paths_to_remove.remove(auto_confirm)|"                -e "s|self.uninstalled = paths_to_remove|#self.uninstalled = paths_to_remove|"                  $out/${pkgs.python36.sitePackages}/pip/req/req_install.py
           '';
         });
       };
   };
 
-  # commonBuildInputs = with pkgs; [ postgresql libffi openssl openldap cyrus_sasl pkgconfig libjpeg openjpeg zlib libtiff freetype lcms2 libwebp tcl ];
   commonBuildInputs = with pkgs; [ 
    postgresql libffi openssl openldap cyrus_sasl pkgconfig libjpeg openjpeg zlib libtiff freetype lcms2 libwebp tcl 
 
    python36Packages.pytestrunner
-
     python36Packages.python
-    python36Packages.django
+    python36Packages.django_2_0
     python36Packages.automat
     python36Packages.markdown
     python36Packages.pyhamcrest
@@ -73,7 +71,6 @@ let
     python36Packages.jedi
     python36Packages.kombu
     python36Packages.msgpack
-    python36Packages.musicbrainzngs
     python36Packages.mutagen
     python36Packages.oauth2client
     python36Packages.oauthlib
@@ -107,7 +104,6 @@ let
     python36Packages.youtube-dl
     python36Packages.django_environ
     python36Packages.django_redis
-    python36Packages.django_taggit
     python36Packages.djangorestframework
     python36Packages.google_api_python_client
     python36Packages.ipython_genutils
@@ -117,6 +113,7 @@ let
     python36Packages.python_magic
     python36Packages.requests_oauthlib
     python36Packages.pillow
+    python36Packages.sqlparse
 ];
   commonDoCheck = false;
 
@@ -398,6 +395,48 @@ let
         description = "A drop-in replacement for django's ImageField that provides a flexible, intuitive and easily-extensible interface for creating new images from the one assigned to the field.";
       };
     };
+
+    "django-debug-toolbar" = python.mkDerivation {
+      name = "django-debug-toolbar.1.11";
+        src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/a2/77/27b2c7ed590a98068cb1990a815741e19f47b22513b0f5a36a12dff6adb6/django-debug-toolbar-1.11.tar.gz"; sha256 = "89d75b60c65db363fb24688d977e5fbf0e73386c67acf562d278402a10fc3736"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [
+    ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "https://github.com/jazzband/django-debug-toolbar";
+        license = "";
+        description = "A configurable set of panels that display various debug information about the current request/response.";
+      };
+    };
+
+    "musicbrainzngs" = python.mkDerivation {
+      name = "musicbrainzngs-0.6";
+      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/63/cc/67ad422295750e2b9ee57c27370dc85d5b85af2454afe7077df6b93d5938/musicbrainzngs-0.6.tar.gz"; sha256 = "28ef261a421dffde0a25281dab1ab214e1b407eec568cd05a53e73256f56adb5"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [ ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "https://python-musicbrainzngs.readthedocs.org/";
+        license = licenses.bsdOriginal;
+        description = "Python bindings for the MusicBrainz NGS and the Cover Art Archive webservices";
+      };
+    };
+
+    "django-taggit" = python.mkDerivation {
+      name = "django-taggit-0.22.2";
+      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/87/19/5cf407969421f54029410616887592cfc0e8e30b64e465f583ccb4cb4a3a/django-taggit-0.22.2.tar.gz"; sha256 = "fd13e304ba37ff09e601c4797d893fb7d3e699a789b5afb0b09d686f94470441"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [ ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "http://github.com/alex/django-taggit/tree/master";
+        license = licenses.bsdOriginal;
+        description = "django-taggit is a reusable Django application for simple tagging.";
+      };
+    };
+
+
 
   };
   localOverridesFile = ./requirements_override.nix;

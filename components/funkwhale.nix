@@ -14,6 +14,10 @@ let
     DJANGO_SECRET_KEY = "${cfg.api.django_secret_key}";
     MUSIC_DIRECTORY_PATH = "${cfg.music_directory_path}";
   };
+
+  pythonMissing = import ../requirements_missing.nix { inherit pkgs; };
+  myPython = with pkgs; python36.withPackages(ps: with ps; (builtins.attrValues pythonMissing.packages) ++ [ python django_2_0 automat markdown pyhamcrest pyjwt pygments twisted amqp asgiref asn1crypto async-timeout attrs audioread autobahn backcall beautifulsoup4 billiard celery certifi cffi channels chardet constantly cryptography daphne decorator defusedxml django-allauth future httplib2 hyperlink idna incremental ipython jedi kombu msgpack mutagen oauth2client oauthlib olefile parso pendulum pexpect pickleshare ptyprocess pyacoustid pyasn1 pyasn1-modules pycparser python-dateutil python3-openid pytz pytzdata raven redis requests rsa simplegeneric six traitlets txaio uritemplate urllib3 vine wcwidth whitenoise youtube-dl django_environ django_redis djangorestframework google_api_python_client ipython_genutils prompt_toolkit psycopg2 python_magic requests_oauthlib ldap pillow ]);
+
 in 
 { 
 
@@ -239,9 +243,9 @@ in
             mkdir -p ${cfg.api.static_root}
             chown -R funkwhale ${cfg.api.static_root}
 
-            ${pkgs.python36Packages.python}/bin/python ${funkwhalePkg}/manage.py migrate
-            ${pkgs.python36Packages.python}/bin/python ${funkwhalePkg}/manage.py createsuperuser
-            ${pkgs.python36Packages.python}/bin/python ${funkwhalePkg}/manage.py collectstatic
+            ${myPython}/bin/python ${funkwhalePkg}/manage.py migrate
+            ${myPython}/bin/python ${funkwhalePkg}/manage.py createsuperuser
+            ${myPython}/bin/python ${funkwhalePkg}/manage.py collectstatic
             fi
           '';
         };
@@ -253,7 +257,7 @@ in
 
           serviceConfig = serviceConfig;
           environment = funkwhaleEnv;
-          script = "${pkgs.python36Packages.daphne}/bin/daphne -b ${cfg.api_ip} -p ${cfg.api_port} config.asgi:application --proxy-headers";
+          script = "${myPython}/bin/daphne -b ${cfg.api_ip} -p ${cfg.api_port} config.asgi:application --proxy-headers";
 
           wantedBy = [ "multi-user.target" ];
         };
@@ -265,7 +269,7 @@ in
 
           serviceConfig = serviceConfig;
           environment = funkwhaleEnv;
-          script = "${pkgs.python36Packages.celery}/bin/celery -A funkwhale_api.taskapp worker -l INFO";
+          script = "${myPython}/bin/celery -A funkwhale_api.taskapp worker -l INFO";
 
           wantedBy = [ "multi-user.target" ];
         };
@@ -277,7 +281,7 @@ in
 
           serviceConfig = serviceConfig;
           environment = funkwhaleEnv;
-          script = "${pkgs.python36Packages.celery}/bin/celery -A funkwhale_api.taskapp beat -l INFO";
+          script = "${myPython}/bin/celery -A funkwhale_api.taskapp beat -l INFO";
 
           wantedBy = [ "multi-user.target" ];
         };
