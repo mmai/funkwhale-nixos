@@ -38,7 +38,8 @@ let
     # python36Packages.django-allauth
     # python36Packages.django_environ
     # python36Packages.django_redis
-    # python36Packages.djangorestframework
+    # python36Packages.djangorestframework # => provoque Duplicate Django 1 / Django 2
+    python36Packages.django_taggit
     python36Packages.automat
     python36Packages.markdown
     python36Packages.pyhamcrest
@@ -183,21 +184,6 @@ let
         homepage = "https://github.com/aio-libs/aioredis";
         license = licenses.mit;
         description = "asyncio (PEP 3156) Redis support";
-      };
-    };
-
-    "channels-redis" = python.mkDerivation {
-      name = "channels-redis-2.1.1";
-      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/4c/f1/d74ba52bfd1ea1236c4a55e233d6cd8b3d91b34e44606940f979e5fb1d40/channels_redis-2.1.1.tar.gz"; sha256 = "688233f0114a921239345c388ae4ed3314de345b53832f67b85926b0040a279a"; };
-      doCheck = commonDoCheck;
-      buildInputs = commonBuildInputs;
-      propagatedBuildInputs = [
-      self."aioredis"
-    ];
-      meta = with pkgs.stdenv.lib; {
-        homepage = "http://github.com/django/channels_redis/";
-        license = licenses.bsdOriginal;
-        description = "Redis-backed ASGI channel layer implementation";
       };
     };
 
@@ -407,19 +393,6 @@ let
       };
     };
 
-    "django-taggit" = python.mkDerivation {
-      name = "django-taggit-0.22.2";
-      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/87/19/5cf407969421f54029410616887592cfc0e8e30b64e465f583ccb4cb4a3a/django-taggit-0.22.2.tar.gz"; sha256 = "fd13e304ba37ff09e601c4797d893fb7d3e699a789b5afb0b09d686f94470441"; };
-      doCheck = commonDoCheck;
-      buildInputs = commonBuildInputs;
-      propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
-        homepage = "http://github.com/alex/django-taggit/tree/master";
-        license = licenses.bsdOriginal;
-        description = "django-taggit is a reusable Django application for simple tagging.";
-      };
-    };
-
     "django-allauth" = python.mkDerivation {
       name = "django-allauth-0.36.0";
       src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/28/86/186141ba1aa5eb98bb73ad7c010c1ce7d986f3c40655536ab156b36a2847/django-allauth-0.36.0.tar.gz"; sha256 = "7d9646e3560279d6294ebb4c361fef829708d106da697658cf158bf2ca57b474"; };
@@ -461,33 +434,6 @@ let
       };
     };
 
-    "djangorestframework" = python.mkDerivation {
-      name = "djangorestframework-3.7.7";
-      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/6b/e0/e63919a37d0df8994cf97df19bffd6137957120b30915e6d57aa80e5408e/djangorestframework-3.7.7.tar.gz"; sha256 = "9f9e94e8d22b100ed3a43cee8c47a7ff7b185e778a1f2da9ec5c73fc4e081b87"; };
-      doCheck = commonDoCheck;
-      buildInputs = commonBuildInputs;
-      propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
-        homepage = "http://www.django-rest-framework.org";
-        license = licenses.bsdOriginal;
-        description = "Web APIs for Django, made easy.";
-      };
-    };
-
-    "django-rest-auth" = python.mkDerivation {
-      name = "django-rest-auth-0.9.3";
-      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/d3/21/059f2b44e0e4dc21a63f7d4095e7f22b159117de6bc38732813516aab2f9/django-rest-auth-0.9.3.tar.gz"; sha256 = "ad155a0ed1061b32e3e46c9b25686e397644fd6acfd35d5c03bc6b9d2fc6c82a"; };
-      doCheck = commonDoCheck;
-      buildInputs = commonBuildInputs;
-      propagatedBuildInputs = [
-    ];
-      meta = with pkgs.stdenv.lib; {
-        homepage = "http://github.com/Tivix/django-rest-auth";
-        license = "";
-        description = "Create a set of REST API endpoints for Authentication and Registration";
-      };
-    };
-
     "channels" = python.mkDerivation {
       name = "channels-2.0.2";
       src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/09/9b/61075a16af435d9a70d8b5cd2663ed63c8ba1eac29d355e55ed9e3455175/channels-2.0.2.tar.gz"; sha256 = "5d41e0f2aa40f9755f36c2c1dd83748b6793732190d577922e06294a3b37fd92"; };
@@ -515,7 +461,52 @@ let
       };
     };
 
+    # pas trouvé par django-rest-auth
+    "djangorestframework" = python.mkDerivation {
+      name = "djangorestframework";
+      # name = "djangorestframework-3.7.7";
+      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/6b/e0/e63919a37d0df8994cf97df19bffd6137957120b30915e6d57aa80e5408e/djangorestframework-3.7.7.tar.gz"; sha256 = "9f9e94e8d22b100ed3a43cee8c47a7ff7b185e778a1f2da9ec5c73fc4e081b87"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [ "djangorestframework" ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "http://www.django-rest-framework.org";
+        license = licenses.bsdOriginal;
+        description = "Web APIs for Django, made easy.";
+      };
+    };
 
+    # Plantent au build :
+
+    #XXX dependency djangorestframework  >= 3.1.3
+    "django-rest-auth" = python.mkDerivation {
+      name = "django-rest-auth-0.9.3";
+      src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/d3/21/059f2b44e0e4dc21a63f7d4095e7f22b159117de6bc38732813516aab2f9/django-rest-auth-0.9.3.tar.gz"; sha256 = "ad155a0ed1061b32e3e46c9b25686e397644fd6acfd35d5c03bc6b9d2fc6c82a"; };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs;
+      propagatedBuildInputs = [
+    ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "http://github.com/Tivix/django-rest-auth";
+        license = "";
+        description = "Create a set of REST API endpoints for Authentication and Registration";
+      };
+    };
+
+    # "channels-redis" = python.mkDerivation {
+    #   name = "channels-redis-2.1.1";
+    #   src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/4c/f1/d74ba52bfd1ea1236c4a55e233d6cd8b3d91b34e44606940f979e5fb1d40/channels_redis-2.1.1.tar.gz"; sha256 = "688233f0114a921239345c388ae4ed3314de345b53832f67b85926b0040a279a"; };
+    #   doCheck = commonDoCheck;
+    #   buildInputs = commonBuildInputs;
+    #   propagatedBuildInputs = [
+    #   self."aioredis"
+    # ];
+    #   meta = with pkgs.stdenv.lib; {
+    #     homepage = "http://github.com/django/channels_redis/";
+    #     license = licenses.bsdOriginal;
+    #     description = "Redis-backed ASGI channel layer implementation";
+    #   };
+    # };
 
 
   };
