@@ -463,8 +463,7 @@ let
 
     # pas trouvé par django-rest-auth
     "djangorestframework" = python.mkDerivation {
-      name = "djangorestframework";
-      # name = "djangorestframework-3.7.7";
+      name = "djangorestframework-3.7.7";
       src = pkgs.fetchurl { url = "https://files.pythonhosted.org/packages/6b/e0/e63919a37d0df8994cf97df19bffd6137957120b30915e6d57aa80e5408e/djangorestframework-3.7.7.tar.gz"; sha256 = "9f9e94e8d22b100ed3a43cee8c47a7ff7b185e778a1f2da9ec5c73fc4e081b87"; };
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs;
