@@ -8,8 +8,8 @@ cd funkwhale/api
 git checkout 0.17
 vim requirements/base.txt # requests-http-signature==0.1 à la place de git+https://github.com/EliotBerriot/requests-http-signature.git@signature-header-support
 nixenv -i pypi2nix
-pypi2nix -V "3.6" -r requirements/base.txt -E postgresql -E libffi -E openssl -E openldap -E cyrus_sasl -E "pkgconfig libjpeg openjpeg zlib libtiff freetype lcms2 libwebp tcl"
-# tester avec:
+pypi2nix -V "3.6" -e setuptools-scm -e isort -e m2r -r requirements/base.txt -E "postgresql libffi openssl openldap cyrus_sasl pkgconfig libjpeg openjpeg zlib libtiff freetype lcms2 libwebp tcl"
+# (-e setuptools-scm est nécessaire pour certaindes dépendances (c. https://github.com/garbas/pypi2nix/issues/217)) tester avec:
 nix-shell requirements.nix -A interpreter
 
 ```
@@ -49,7 +49,38 @@ let
 }
 ```
 
-problème compilation hiredis => ??
+problème `Could not find suitable distribution for Requirement.parse('pytest-runner')`, solution supprimer la dépendance dans Setup.py du paquet :
+
+```
+  "ffmpeg-python" = python.overrideDerivation super."ffmpeg-python" (old: {
+    patchPhase = ''
+      sed -i \
+        -e "s|'pytest-runner'||" \
+        setup.py
+    '';
+  });
+
+```
+
+setuptools-scm : en plus du `-e setuptools-scm`, ajouter :
+
+```
+  "python-dateutil" = python.overrideDerivation super."python-dateutil" (old: {
+    buildInputs = old.buildInputs ++ [ self."setuptools-scm" ];
+  });
+```
+
+
+problème compilation hiredis (encodage), solution : 
+```
+  "hiredis" = python.overrideDerivation super."hiredis" (old: {
+    buildInputs = old.buildInputs ++ [ pkgs.glibcLocales ];
+    preConfigure = ''
+        export LANG=en_US.UTF-8
+    '';
+   });
+
+```
 
 ```
 cd ../..
