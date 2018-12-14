@@ -23,6 +23,7 @@ in stdenv.mkDerivation {
   src = srcs.api;
   buildInputs = [ pkgs.unzip ];
   propagatedBuildInputs = [ ];
+  patches = [ ./0001-changes.patch ];
   installPhase = ''
     mkdir $out
     cp -R ./* $out

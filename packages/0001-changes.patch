@@ -1,0 +1,19 @@
+diff --git a/config/settings/common.py b/config/settings/common.py
+index 4759d7a..d94da0a 100644
+--- a/config/settings/common.py
++++ b/config/settings/common.py
+@@ -23,9 +23,12 @@ APPS_DIR = ROOT_DIR.path("funkwhale_api")
+ 
+ env = environ.Env()
+ try:
+-    env.read_env(ROOT_DIR.file(".env"))
++    env.read_env(env_file=env.str('FUNKWHALE_ENV_FILE', '.env'))
+ except FileNotFoundError:
+-    pass
++    try:
++        env.read_env(ROOT_DIR.file(".env"))
++    except FileNotFoundError:
++        pass
+ 
+ FUNKWHALE_HOSTNAME = None
+ FUNKWHALE_HOSTNAME_SUFFIX = env("FUNKWHALE_HOSTNAME_SUFFIX", default=None)

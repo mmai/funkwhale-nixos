@@ -13,16 +13,16 @@ let
   funkwhaleHome    = config.users.extraUsers.funkwhale.home;
   funkwhalePkg     = (import ../packages/funkwhale.nix) { pkgs = pkgs; cfg = cfg; };
   funkwhaleEnvFile = (import ./funkwhale.env.nix)       { pkgs = pkgs; cfg = cfg; };
-  # funkwhaleEnv = {
-  #   FUNKWHALE_URL = "${cfg.hostname}";
-  #   STATIC_ROOT = "${cfg.api.static_root}";
-  #   MEDIA_ROOT = "${cfg.api.media_root}";
-  #   DATABASE_URL = "${cfg.api.database_url}";
-  #   DJANGO_ALLOWED_HOSTS = "${cfg.api.django_allowed_hosts}";
-  #   DJANGO_SECRET_KEY = "${cfg.api.django_secret_key}";
-  #   MUSIC_DIRECTORY_PATH = "${cfg.music_directory_path}";
-  # };
-
+  funkwhaleEnv = {
+    FUNKWHALE_ENV_FILE = "${funkwhaleEnvFile}";
+    # FUNKWHALE_URL = "${cfg.hostname}";
+    # STATIC_ROOT = "${cfg.api.static_root}";
+    # MEDIA_ROOT = "${cfg.api.media_root}";
+    # DATABASE_URL = "${cfg.api.database_url}";
+    # DJANGO_ALLOWED_HOSTS = "${cfg.api.django_allowed_hosts}";
+    # DJANGO_SECRET_KEY = "${cfg.api.django_secret_key}";
+    # MUSIC_DIRECTORY_PATH = "${cfg.music_directory_path}";
+  };
 in 
 { 
 
@@ -241,7 +241,7 @@ in
           after = [ "redis.service" "postgresql.service" ];
           wantedBy = [ "funkwhale-server.service" "funkwhale-worker.service" "funkwhale-beat.service" ];
           before   = [ "funkwhale-server.service" "funkwhale-worker.service" "funkwhale-beat.service" ];
-          # environment = funkwhaleEnv;
+          environment = funkwhaleEnv;
           script = ''
             if ! test -e ${cfg.api.media_root}; then
             mkdir -p ${cfg.api.media_root}
@@ -265,6 +265,7 @@ in
           partOf = [ "funkwhale.target" ];
 
           serviceConfig = serviceConfig;
+          environment = funkwhaleEnv;
           script = "${pythonEnv}/bin/daphne -b ${cfg.api_ip} -p ${cfg.api_port} config.asgi:application --proxy-headers";
 
           wantedBy = [ "multi-user.target" ];
@@ -275,6 +276,7 @@ in
           partOf = [ "funkwhale.target" ];
 
           serviceConfig = serviceConfig;
+          environment = funkwhaleEnv;
           script = ''
             if ! test -e ${funkwhaleHome}/run; then
             mkdir -p ${funkwhaleHome}/run
@@ -290,6 +292,7 @@ in
           partOf = [ "funkwhale.target" ];
 
           serviceConfig = serviceConfig;
+          environment = funkwhaleEnv;
           script = ''
             if ! test -e ${funkwhaleHome}/run; then
             mkdir -p ${funkwhaleHome}/run
