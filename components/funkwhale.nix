@@ -3,20 +3,25 @@
 with lib;
 
 let
-  cfg = config.services.funkwhale;
-  funkwhalePkg = (import ../packages/funkwhale.nix) { pkgs = pkgs; cfg = cfg; };
-  funkwhaleEnv = {
-    FUNKWHALE_URL = "${cfg.hostname}";
-    STATIC_ROOT = "${cfg.api.static_root}";
-    MEDIA_ROOT = "${cfg.api.media_root}";
-    DATABASE_URL = "${cfg.api.database_url}";
-    DJANGO_ALLOWED_HOSTS = "${cfg.api.django_allowed_hosts}";
-    DJANGO_SECRET_KEY = "${cfg.api.django_secret_key}";
-    MUSIC_DIRECTORY_PATH = "${cfg.music_directory_path}";
-  };
-
-  pythonMissing = import ./requirements.nix { inherit pkgs; };
-  myPython = with pkgs; python36.withPackages(ps: with ps; (builtins.attrValues pythonMissing.packages));
+  pythonEnv = (
+    let pythonRequirements = import ./requirements.nix { inherit pkgs; };
+    in
+      with pkgs; 
+      python36.withPackages(ps: with ps; (builtins.attrValues pythonRequirements.packages))
+    );
+  cfg              = config.services.funkwhale;
+  funkwhaleHome    = config.users.extraUsers.funkwhale.home;
+  funkwhalePkg     = (import ../packages/funkwhale.nix) { pkgs = pkgs; cfg = cfg; };
+  funkwhaleEnvFile = (import ./funkwhale.env.nix)       { pkgs = pkgs; cfg = cfg; };
+  # funkwhaleEnv = {
+  #   FUNKWHALE_URL = "${cfg.hostname}";
+  #   STATIC_ROOT = "${cfg.api.static_root}";
+  #   MEDIA_ROOT = "${cfg.api.media_root}";
+  #   DATABASE_URL = "${cfg.api.database_url}";
+  #   DJANGO_ALLOWED_HOSTS = "${cfg.api.django_allowed_hosts}";
+  #   DJANGO_SECRET_KEY = "${cfg.api.django_secret_key}";
+  #   MUSIC_DIRECTORY_PATH = "${cfg.music_directory_path}";
+  # };
 
 in 
 { 
@@ -233,55 +238,64 @@ in
         };
         funkwhale-init = {
           description = "Funkwhale initialization";
-          after = [ "postgresql.service" ];
-          before = ["funkwhale-server.service" "funkwhale-worker.service" "funkwhale-beat.service"];
-          environment = funkwhaleEnv;
+          after = [ "redis.service" "postgresql.service" ];
+          wantedBy = [ "funkwhale-server.service" "funkwhale-worker.service" "funkwhale-beat.service" ];
+          before   = [ "funkwhale-server.service" "funkwhale-worker.service" "funkwhale-beat.service" ];
+          # environment = funkwhaleEnv;
           script = ''
             if ! test -e ${cfg.api.media_root}; then
             mkdir -p ${cfg.api.media_root}
-            chown -R funkwhale ${cfg.api.media_root}
             mkdir -p ${cfg.api.static_root}
-            chown -R funkwhale ${cfg.api.static_root}
+            mkdir -p ${cfg.music_directory_path}
 
-            ${myPython}/bin/python ${funkwhalePkg}/manage.py migrate
-            ${myPython}/bin/python ${funkwhalePkg}/manage.py createsuperuser
-            ${myPython}/bin/python ${funkwhalePkg}/manage.py collectstatic
+            ${pythonEnv}/bin/python ${funkwhalePkg}/manage.py migrate
+            ${pythonEnv}/bin/python ${funkwhalePkg}/manage.py createsuperuser
+            ${pythonEnv}/bin/python ${funkwhalePkg}/manage.py collectstatic
+            fi
+            if ! test -e ${funkwhaleHome}/config; then
+              mkdir -p ${funkwhaleHome}/config
+              ln -s ${funkwhaleEnvFile} ${funkwhaleHome}/config/.env
+              ln -s ${funkwhaleEnvFile} ${funkwhaleHome}/.env
             fi
           '';
         };
 
         funkwhale-server = {
           description = "Funkwhale application server";
-          after = [ "redis.service" "postgresql.service" ];
           partOf = [ "funkwhale.target" ];
 
           serviceConfig = serviceConfig;
-          environment = funkwhaleEnv;
-          script = "${myPython}/bin/daphne -b ${cfg.api_ip} -p ${cfg.api_port} config.asgi:application --proxy-headers";
+          script = "${pythonEnv}/bin/daphne -b ${cfg.api_ip} -p ${cfg.api_port} config.asgi:application --proxy-headers";
 
           wantedBy = [ "multi-user.target" ];
         };
 
         funkwhale-worker = {
           description = "Funkwhale celery worker";
-          after = [ "redis.service" "postgresql.service" ];
           partOf = [ "funkwhale.target" ];
 
           serviceConfig = serviceConfig;
-          environment = funkwhaleEnv;
-          script = "${myPython}/bin/celery -A funkwhale_api.taskapp worker -l INFO";
+          script = ''
+            if ! test -e ${funkwhaleHome}/run; then
+            mkdir -p ${funkwhaleHome}/run
+            fi
+            ${pythonEnv}/bin/celery -A funkwhale_api.taskapp worker -l INFO
+            '';
 
           wantedBy = [ "multi-user.target" ];
         };
 
         funkwhale-beat = {
           description = "Funkwhale celery beat process";
-          after = [ "redis.service" "postgresql.service" ];
           partOf = [ "funkwhale.target" ];
 
           serviceConfig = serviceConfig;
-          environment = funkwhaleEnv;
-          script = "${myPython}/bin/celery -A funkwhale_api.taskapp beat -l INFO";
+          script = ''
+            if ! test -e ${funkwhaleHome}/run; then
+            mkdir -p ${funkwhaleHome}/run
+            fi
+            ${pythonEnv}/bin/celery -A funkwhale_api.taskapp beat -l INFO --schedule="${funkwhaleHome}/run/celerybeat-schedule.db"  --pidfile="${funkwhaleHome}/run/celerybeat.pid"
+            '';
 
           wantedBy = [ "multi-user.target" ];
         };

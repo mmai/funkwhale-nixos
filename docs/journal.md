@@ -18,9 +18,9 @@ provoque erreur
 error: infinite recursion encountered, at /nix/store/mxg4bbblxfns96yrz0nalxyiyjl7gj98-nix-2.1.2/share/nix/corepkgs/derivation.nix:18:9
 (use '--show-trace' to show detailed location information)
 ```
-`--show-trace` permet de voir quel paquet a des dépendances circulaires (Twisted)
+`--show-trace` permet de voir quel paquet a des dépendances circulaires (ici _Twisted_)
 
-Éditer le fichier `requirements_override.nix` et supprimer les dépendances circulaire sur ce modèle, en testant petit à petit les dépendances listées dans requirements.nix:
+Éditer le fichier `requirements_override.nix` et supprimer les dépendances circulaire sur ce modèle, en regardant dans requirements.nix quels paquets référencés dans _Twisted_ référencent eux-même _Twisted_ :
 
 ```
 { pkgs, python }:
@@ -41,9 +41,15 @@ let
 
   self: super: {
 
-  "Twisted" = python.overrideDerivation super."Twisted" (old: {
+   "Automat" = python.overrideDerivation super."Automat" (old: {
+     propagatedBuildInputs =
+      removeDependencies [ "Twisted" ] old.propagatedBuildInputs;
+     buildInputs = old.buildInputs ++ [ self."m2r" self."setuptools-scm" ];
+  });
+
+  "incremental" = python.overrideDerivation super."incremental" (old: {
     propagatedBuildInputs =
-      removeDependencies [ "Automat" "incremental" ] old.propagatedBuildInputs;
+      removeDependencies [ "Twisted" ] old.propagatedBuildInputs;
   });
 
 }

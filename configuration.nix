@@ -20,10 +20,16 @@ with pkgs;
   };
 
   users.extraUsers.funkwhale = {
+    createHome = true;
+    isNormalUser = true;
     home = "/srv/funkwhale";
     description = "Funkwhale server user";
     # extraGroups = [ "wheel" "networkmanager" ];
     # openssh.authorizedKeys.keys = sshkeys;
+  };
+
+  system.activationScripts = {
+    enableHomeDirsInSrv = "chmod a+x /srv ";
   };
 
   # Overrides default 30M
