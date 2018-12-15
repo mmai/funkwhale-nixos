@@ -32,6 +32,8 @@ let
       removeDependencies [ "Twisted" ] old.propagatedBuildInputs;
   });
 
+  "python-magic" = pkgs.python36Packages.python_magic;
+
   "django-taggit" = python.overrideDerivation super."django-taggit" (old: {
     patchPhase = ''
       sed -i \
@@ -44,6 +46,14 @@ let
     patchPhase = ''
       sed -i \
         -e "s|'pytest-runner'||" \
+        setup.py
+    '';
+  });
+
+  "daphne" = python.overrideDerivation super."daphne" (old: {
+    patchPhase = ''
+      sed -i \
+        -e "s|"pytest-runner"||" \
         setup.py
     '';
   });

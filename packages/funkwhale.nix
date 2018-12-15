@@ -28,5 +28,8 @@ in stdenv.mkDerivation {
     mkdir $out
     cp -R ./* $out
     unzip ${srcs.frontend} -d $out
+    mv $out/front/ $out/front_tmp
+    mv $out/front_tmp/dist $out/front
+    rmdir $out/front_tmp
     '';
   }

@@ -28,10 +28,12 @@ with pkgs;
     # openssh.authorizedKeys.keys = sshkeys;
   };
 
-  system.activationScripts = {
-    enableHomeDirsInSrv = "chmod a+x /srv ";
-  };
-
+  system.activationScripts.enableHomeDirsInSrv = ''
+        if ! test -e /srv; then
+           mkdir /srv 
+        fi
+        chmod a+x /srv 
+      '';
   # Overrides default 30M
   services.nginx.clientMaxBodySize = "40m";
 
