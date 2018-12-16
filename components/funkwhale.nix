@@ -166,10 +166,10 @@ in
       enable = true;
       # package = pkgs.postgresql100;
       # enableTCPIP = true;
-      # authentication = pkgs.lib.mkOverride 10 ''
-      #   local all all trust
-      #   host all all ::1/128 trust
-      # '';
+      authentication = pkgs.lib.mkOverride 10 ''
+        local all all trust
+        host all all ::1/128 trust
+      '';
       initialScript = pkgs.writeText "backend-initScript" ''
         CREATE ROLE funkwhale WITH LOGIN PASSWORD 'funkwhale' CREATEDB;
         CREATE DATABASE funkwhale WITH ENCODING 'utf8';
@@ -236,9 +236,21 @@ in
           description = "Funkwhale";
           wants = ["funkwhale-server.service" "funkwhale-worker.service" "funkwhale-beat.service"];
         };
+        funkwhale-psql-init = {
+          description = "Funkwhale database preparation";
+          after = [ "redis.service" "postgresql.service" ];
+          wantedBy = [ "funkwhale-init.service" ];
+          before   = [ "funkwhale-init.service" ];
+          serviceConfig = {
+            User = "postgres";
+          };
+          script = ''
+            ${pkgs.postgresql}/bin/psql -d funkwhale -c 'CREATE EXTENSION IF NOT EXISTS "unaccent";'
+          '';
+        };
         funkwhale-init = {
           description = "Funkwhale initialization";
-          after = [ "redis.service" "postgresql.service" ];
+          after = [ "funkwhale-psql-init.service" ];
           wantedBy = [ "funkwhale-server.service" "funkwhale-worker.service" "funkwhale-beat.service" ];
           before   = [ "funkwhale-server.service" "funkwhale-worker.service" "funkwhale-beat.service" ];
           environment = funkwhaleEnv;
