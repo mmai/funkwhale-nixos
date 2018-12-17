@@ -7,55 +7,56 @@ nix-channel --add  https://nixos.org/channels/nixos-18.09 nixpkgs
 nix-channel --update
 ```
 
-1. Installation de l'outil de déploiement NixOps
+1. Install _NixOps_ deployment tool
 
 ```bash
 nixenv -i nixops
 ```
 
-Test sur virtualbox : virtualbox doit être installé. 
+If you want to test on Virtualbox, you need it installed (of course) and started.
 
-Note that for this to work the vboxnet0 network has to exist - you can add it in the VirtualBox general settings under Networks - Host-only Networks if necessary.
+The vboxnet0 network has to exist - you can add it in the VirtualBox general settings under Networks - Host-only Networks if necessary.
 
-2. Initialisation du déploiement (contient l'état du déploiement associé)
+2. Initiate deployment
 
 ```bash
 nixops create ./deploy/logical.nix ./deploy/physical/virtualbox.nix -d funkwhale
 ```
 
-Pour obtenir la liste des déploiements configurés :
-```
-nixops list
-```
+3. Deploy
 
-Déployer :
 ```
 nixops deploy -d funkwhale
 ```
 
-Si erreur `Exception: unable to activate new configuration` lié à _virtualbox.service_ : 
+If you get an error `Exception: unable to activate new configuration` related to _virtualbox.service_, you can force deployment like this: 
 
 ```
 nixops deploy --force-reboot -d funkwhale
 ```
 
-Info sur le déploiement:
+Get the IP adress of the server :
 ```
 nixops info -d funkwhale
 ```
 
-Se connecter en ssh sur la machine :
+Edit your _/etc/hosts_ file and associate the configured domain name with the IP adress :
+```
+192.168.56.101 funkwhale.localhost funkwhale.local
+```
+
+4. Create a Funkwhale admin user
+
+```
+make superuser
+```
+
+You should be able to login on http://funkwhale.local/login with the created account.
+
+5. Other commands
+
+Connect on the machine with
 ```
 nixops ssh -d funkwhale funkwhale
-```
-
-Statut d'une machine virtuelle :
-```
-nixops check -d funkwhale
-```
-
-Détruire une machine virtuelle :
-```
-nixops destroy -d funkwhale
 ```
 

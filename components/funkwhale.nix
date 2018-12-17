@@ -15,13 +15,6 @@ let
   funkwhaleEnvFile = (import ./funkwhale.env.nix)       { pkgs = pkgs; cfg = cfg; };
   funkwhaleEnv = {
     FUNKWHALE_ENV_FILE = "${funkwhaleEnvFile}";
-    # FUNKWHALE_URL = "${cfg.hostname}";
-    # STATIC_ROOT = "${cfg.api.static_root}";
-    # MEDIA_ROOT = "${cfg.api.media_root}";
-    # DATABASE_URL = "${cfg.api.database_url}";
-    # DJANGO_ALLOWED_HOSTS = "${cfg.api.django_allowed_hosts}";
-    # DJANGO_SECRET_KEY = "${cfg.api.django_secret_key}";
-    # MUSIC_DIRECTORY_PATH = "${cfg.music_directory_path}";
   };
 in 
 { 
@@ -229,6 +222,7 @@ in
         let serviceConfig = {
             User = "funkwhale";
             WorkingDirectory = "${funkwhalePkg}";
+            EnvironmentFile =  "${funkwhaleEnvFile}";
             # WorkingDirectory = "${funkwhalePkg}/api";
           };
         in {
@@ -255,13 +249,18 @@ in
           before   = [ "funkwhale-server.service" "funkwhale-worker.service" "funkwhale-beat.service" ];
           environment = funkwhaleEnv;
           script = ''
+            chmod a+rx ${funkwhaleHome}
             if ! test -e ${cfg.api.media_root}; then
             mkdir -p ${cfg.api.media_root}
             mkdir -p ${cfg.api.static_root}
             mkdir -p ${cfg.music_directory_path}
+            echo "#!/bin/sh
+            
+            ${pythonEnv}/bin/python ${funkwhalePkg}/manage.py createsuperuser" > ${funkwhaleHome}/createSuperUser.sh
+            chmod u+x ${funkwhaleHome}/createSuperUser.sh
+            chown -R funkwhale.users ${funkwhaleHome}
 
             ${pythonEnv}/bin/python ${funkwhalePkg}/manage.py migrate
-            ${pythonEnv}/bin/python ${funkwhalePkg}/manage.py createsuperuser
             ${pythonEnv}/bin/python ${funkwhalePkg}/manage.py collectstatic
             fi
             if ! test -e ${funkwhaleHome}/config; then

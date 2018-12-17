@@ -24,8 +24,6 @@ with pkgs;
     isNormalUser = true;
     home = "/srv/funkwhale";
     description = "Funkwhale server user";
-    # extraGroups = [ "wheel" "networkmanager" ];
-    # openssh.authorizedKeys.keys = sshkeys;
   };
 
   system.activationScripts.enableHomeDirsInSrv = ''
