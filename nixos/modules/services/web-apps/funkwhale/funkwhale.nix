@@ -11,7 +11,6 @@ let
     );
   cfg              = config.services.funkwhale;
   funkwhaleHome    = config.users.extraUsers.funkwhale.home;
-  funkwhalePkg     = (import ../packages/funkwhale.nix) { pkgs = pkgs; cfg = cfg; };
   funkwhaleEnvFile = (import ./funkwhale.env.nix)       { pkgs = pkgs; cfg = cfg; };
   funkwhaleEnv = {
     FUNKWHALE_ENV_FILE = "${funkwhaleEnvFile}";
@@ -185,7 +184,7 @@ in
         # enableACME = true; #Ask Let's Encrypt to sign a certificate for this vhost
         # addSSL = true;
         # forceSSL = true;
-          root = "${funkwhalePkg}/front";
+          root = "${pkgs.funkwhale}/front";
           default = true;
           locations = {
             "/" = {
@@ -221,9 +220,9 @@ in
       systemd.services = 
         let serviceConfig = {
             User = "funkwhale";
-            WorkingDirectory = "${funkwhalePkg}";
+            WorkingDirectory = "${pkgs.funkwhale}";
             EnvironmentFile =  "${funkwhaleEnvFile}";
-            # WorkingDirectory = "${funkwhalePkg}/api";
+            # WorkingDirectory = "${pkgs.funkwhale}/api";
           };
         in {
         "funkwhale.target" = {
@@ -256,12 +255,12 @@ in
             mkdir -p ${cfg.music_directory_path}
             echo "#!/bin/sh
             
-            ${pythonEnv}/bin/python ${funkwhalePkg}/manage.py createsuperuser" > ${funkwhaleHome}/createSuperUser.sh
+            ${pythonEnv}/bin/python ${pkgs.funkwhale}/manage.py createsuperuser" > ${funkwhaleHome}/createSuperUser.sh
             chmod u+x ${funkwhaleHome}/createSuperUser.sh
             chown -R funkwhale.users ${funkwhaleHome}
 
-            ${pythonEnv}/bin/python ${funkwhalePkg}/manage.py migrate
-            ${pythonEnv}/bin/python ${funkwhalePkg}/manage.py collectstatic
+            ${pythonEnv}/bin/python ${pkgs.funkwhale}/manage.py migrate
+            ${pythonEnv}/bin/python ${pkgs.funkwhale}/manage.py collectstatic
             fi
             if ! test -e ${funkwhaleHome}/config; then
               mkdir -p ${funkwhaleHome}/config

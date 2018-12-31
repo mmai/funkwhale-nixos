@@ -98,3 +98,24 @@ cp work/funkwhale/api/requirements.nix . # référencer ce fichier dans packages
 Regarder les différences entre versions pour répercuter changements dans _components/funkwhale.nix_ :
 - deploy/*.service
 - deploy/nginx.template
+
+## Intégration dans dépôt officiel
+
+```
+cd ~/travaux/nixpkgs/
+git checkout master && git pull
+git checkout funkwhale && git merge master
+```
+
+- pkg dans _pkgs/servers/web-apps/funkwhale/_
+- module dans _nixos/modules/services/web-apps/funkwhale/_
+
+Edition de _shell.nix_ : `pkgsSrc = /home/henri/travaux/nixpkgs`
+
+tester le déploiement avec : 
+```
+nix-shell --run "nixops deploy -d funkwhale"
+```
+
+
+

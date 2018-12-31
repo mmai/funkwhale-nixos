@@ -3,11 +3,14 @@
 with pkgs;
 
 { 
-  imports = [
-    ./components/funkwhale.nix 
-  ];
+  imports =
+    [ 
+      <nixos/modules/services/web-apps/funkwhale/funkwhale.nix>
+      # because this line fails in module-list.nix :
+  # ./services/web-apps/funkwhale/funkwhale.nix
+    ];
 
-  # See components/funkwhale.nix for all available options
+  # See nixos/modules/services/web-apps/funkwhale.nix for all available options
   services.funkwhale = {
     enable = true;
     hostname = "funkwhale.local";
@@ -26,6 +29,7 @@ with pkgs;
     description = "Funkwhale server user";
   };
 
+  # We use the default location in /srv/funkwhale, so we need to make it accessible
   system.activationScripts.enableHomeDirsInSrv = ''
         if ! test -e /srv; then
            mkdir /srv 
@@ -40,5 +44,5 @@ with pkgs;
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
   # The NixOS release to be compatible with for stateful data such as databases.
-  system.stateVersion = "18.09";
+  system.stateVersion = "19.03";
 }

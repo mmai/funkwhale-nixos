@@ -1,5 +1,4 @@
-{ cfg, pkgs ? import <nixpkgs> {} }:
-# { cfg, stdenv, fetchurl, unzip }:
+{ pkgs ? import <nixpkgs> {} }:
 with pkgs;
 
 let
