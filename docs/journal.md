@@ -95,7 +95,7 @@ cp work/funkwhale/api/requirements.nix . # référencer ce fichier dans packages
 
 ## Mise à jour
 
-Regarder les différences entre versions pour répercuter changements dans _components/funkwhale.nix_ :
+Regarder les différences dans ces fichiers pour répercuter les changements dans _nixos/modules/services/web-apps/funkwhale/funkwhale.nix_ :
 - deploy/*.service
 - deploy/nginx.template
 

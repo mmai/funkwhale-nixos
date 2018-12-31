@@ -1,10 +1,14 @@
 # Funkwhale on NixOS
 
-0. Set the correct nix-channel
+0. Prepare local environment 
+
+Get nix packages updated with funkwhale, and this deployment template 
 
 ```bash
-nix-channel --add  https://nixos.org/channels/nixos-18.09 nixpkgs
-nix-channel --update
+git clone https://github.com/mmai/nixpkgs.git
+git clone https://github.com/mmai/funkwhale-nixos.git
+cd funkwhale-nixos
+nix-shell
 ```
 
 1. Install _NixOps_ deployment tool
