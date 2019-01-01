@@ -1,12 +1,16 @@
 let
   # Use a specific version of nixpkgs:
-  # pkgsSrc = builtins.fetchTarball {
-  #   url = https://github.com/nixos/nixpkgs-channels/archive/19879836d10f64a10658d1e2a84fc54b090e2087.tar.gz;
-  #   sha256 = "f01e3a617e5b1d3c2ee8e525f3a48d1c4402d7c47f5cbf772c48ff57056481f4";
-  # };
+  pkgsSrc = builtins.fetchGit {
+    # Descriptive name to make the store path easier to identify
+    name = "nixpkgs-funkwhale-2019-01-01";
+    url = https://github.com/mmai/nixpkgs;
+    # Commit hash as of 2019-01-01
+    # `git ls-remote https://github.com/mmai/nixpkgs`
+    rev = "75ca6faece8f06096fb45d0b341c39a7ad47c256";
+  };
   
   # Use a local version of nixpkgs:
-  pkgsSrc = ../nixpkgs;
+  # pkgsSrc = /home/henri/travaux/nixpkgs;
 
   pkgs = (import pkgsSrc {});
 in
