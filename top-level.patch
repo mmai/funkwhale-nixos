@@ -1,0 +1,13 @@
+diff --git a/pkgs/top-level/default.nix b/pkgs/top-level/default.nix
+index dcd443a1c29..2f41b0a27ca 100644
+--- a/pkgs/top-level/default.nix
++++ b/pkgs/top-level/default.nix
+@@ -60,7 +60,7 @@ in let
+   localSystem = lib.systems.elaborate (
+     # Allow setting the platform in the config file. This take precedence over
+     # the inferred platform, but not over an explicitly passed-in one.
+-    builtins.intersectAttrs { platform = null; } config
++    builtins.intersectAttrs { platform = null; } (if config == null then {} else config)
+     // args.localSystem);
+ 
+   crossSystem = if crossSystem0 == null then localSystem

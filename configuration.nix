@@ -6,7 +6,7 @@ with pkgs;
   imports =
     [ 
       <nixos/modules/services/web-apps/funkwhale/funkwhale.nix>
-      # because this line fails in module-list.nix :
+      # because this line in module-list.nix ( 18.09 & unstable ) gives error "unable to parse intermediate.xml":
   # ./services/web-apps/funkwhale/funkwhale.nix
     ];
 
