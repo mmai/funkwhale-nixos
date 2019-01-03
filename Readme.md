@@ -2,9 +2,9 @@
 
 An example of how to deploy [Funkwhale](https://funkwhale.audio/) with NixOS and [NixOps](https://nixos.org/nixops/).
 
-This uses the Funkwhale package and module defined at the following path in NixOS packages repository:
-- pkgs/servers/web-apps/funkwhale
-- nixos/modules/services/web-apps/funkwhale
+This uses the Funkwhale package and module, of which I am the maintainner. If you want to take a look, they are defined at the following path in NixOS packages repository:
+- [pkgs/servers/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/master/pkgs/servers/web-apps/funkwhale)
+- [nixos/modules/services/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/master/nixos/modules/services/web-apps/funkwhale)
 
 ## Prepare local environment 
 
@@ -15,15 +15,13 @@ git clone https://github.com/mmai/funkwhale-nixos.git
 cd funkwhale-nixos
 ```
 
-Install [Nix](https://nixos.org/nix/) and bootstrap an environment with Funkwhale packages and the _nixops_ deployment tool :
+Install [Nix](https://nixos.org/nix/) and bootstrap an environment with Funkwhale packages and the _nixops_ deployment tool (the Funkwhale packages are not yet merged in the official NixOS repository, meanwhile the [maintainer repository](https://github.com/mmai/nixpkgs) is configured in _shell.nix_) :
 
 ```
 curl https://nixos.org/nix/install | sh
 nix-shell
 nixenv -i nixops
 ```
-
-The Funkwhale packages are yet merged in the official NixOS repository, meanwhile we tell _nix-shell_ to use the maintainer repository (https://github.com/mmai/nixpkgs )
 
 ## Set up deployment target
 
@@ -33,9 +31,11 @@ You may want to test a local deployment on a virtual machine first, see the foll
 
 ### VirtualBox
 
-VirtualBox should be installed (of course) and started.
+[VirtualBox](https://www.virtualbox.org/) should be installed (of course) and started.
 
-The vboxnet0 network has to exist - you can add it in the VirtualBox general settings under Networks - Host-only Networks if necessary.
+The _vboxnet0_ network has to exist - you can add it in the VirtualBox general settings under _Networks - Host-only Networks_ if necessary.
+
+Then create the deployment configuration with :
 
 ```bash
 nixops create ./deploy/logical.nix ./deploy/physical/virtualbox.nix -d funkwhale
