@@ -1,5 +1,15 @@
 # Funkwhale on NixOS
 
+An example of how to deploy Funkwhale on NixOS
+
+This uses the Funkwhale package and module defined at the following path in NixOS packages repository:
+- pkgs/servers/web-apps/funkwhale
+- nixos/modules/services/web-apps/funkwhale
+
+Those are not yet merged in the official repository, meanwhile we use the development repository (https://github.com/mmai/nixpkgs )
+
+The following process shows how to deploy Funkwhale locally on a VirtualBox virtual machine.
+
 ## Prepare local environment 
 
 ```bash
@@ -13,6 +23,8 @@ nix-shell
 ```bash
 nixenv -i nixops
 ```
+
+## Configure VirtualBox
 
 If you want to test on Virtualbox, you need it installed (of course) and started.
 
