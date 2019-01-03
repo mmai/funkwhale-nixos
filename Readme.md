@@ -2,26 +2,35 @@
 
 An example of how to deploy [Funkwhale](https://funkwhale.audio/) with NixOS and [NixOps](https://nixos.org/nixops/).
 
-This uses the Funkwhale package and module, of which I am the maintainner. If you want to take a look, they are defined at the following path in NixOS packages repository:
+This uses the Funkwhale package and module, of which I am the maintainer. If you want to take a look, they are defined at the following path in NixOS packages repository:
 - [pkgs/servers/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/master/pkgs/servers/web-apps/funkwhale)
 - [nixos/modules/services/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/master/nixos/modules/services/web-apps/funkwhale)
 
 ## Prepare local environment 
 
-Get this repository
+1. Get this repository
 
-```bash
-git clone https://github.com/mmai/funkwhale-nixos.git
-cd funkwhale-nixos
-```
+  ```bash
+  git clone https://github.com/mmai/funkwhale-nixos.git
+  cd funkwhale-nixos
+  ```
 
-Install [Nix](https://nixos.org/nix/) and bootstrap an environment with Funkwhale packages and the _nixops_ deployment tool (the Funkwhale packages are not yet merged in the official NixOS repository, meanwhile the [maintainer repository](https://github.com/mmai/nixpkgs) is configured in _shell.nix_) :
+2. Install [Nix](https://nixos.org/nix/)
 
-```
-curl https://nixos.org/nix/install | sh
-nix-shell
-nixenv -i nixops
-```
+  ```
+  curl https://nixos.org/nix/install | sh
+  ```
+
+  Logout an login again to have the correct environment variables.
+
+3. Bootstrap an environment with Funkwhale packages and the _nixops_ deployment tool (the Funkwhale packages are not yet merged in the official NixOS repository, meanwhile the maintainer repository is configured in _shell.nix_) :
+
+  ```
+  nix-shell
+  nix-env -i nixops
+  ```
+
+  The nix-shell command takes some time to complete.
 
 ## Set up deployment target
 
