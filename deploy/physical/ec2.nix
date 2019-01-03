@@ -1,13 +1,13 @@
 let
   # Insert your AWS access key here
   accessKey = "youraccesskey";
-  region = "eu-west-3"; # Paris
+  region = "eu-west-1"; # Dublin
 in {
-  # Mapping of our 'helloserver' machine
+  # Mapping of our 'funkwhale' machine
   funkwhale = { resources, ... }:
     { deployment.targetEnv = "ec2";
       deployment.ec2.region = region;
-      deployment.ec2.instanceType = "t1.micro";
+      deployment.ec2.instanceType = "t2.micro";
       deployment.ec2.accessKeyId = accessKey;
       # We'll let NixOps generate a keypair automatically
       deployment.ec2.keyPair = resources.ec2KeyPairs.funkwhale-kp.name;

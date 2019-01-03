@@ -52,7 +52,13 @@ nixops create ./deploy/logical.nix ./deploy/physical/virtualbox.nix -d funkwhale
 
 ### Amazon Web Services
 
-TODO
+Set up an account on AWS. Copy your AWS access key and private key in ~/.ac2-keys, it should look like this :
+
+```
+youraccesskey yoursecretkey
+```
+
+On the AWS console, change settings for the default security group and allow ssh inbound.
 
 ### Hetzner VPS
 
