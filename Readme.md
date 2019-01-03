@@ -1,40 +1,53 @@
 # Funkwhale on NixOS
 
-An example of how to deploy Funkwhale on NixOS
+An example of how to deploy [Funkwhale](https://funkwhale.audio/) with NixOS and [NixOps](https://nixos.org/nixops/).
 
 This uses the Funkwhale package and module defined at the following path in NixOS packages repository:
 - pkgs/servers/web-apps/funkwhale
 - nixos/modules/services/web-apps/funkwhale
 
-Those are not yet merged in the official repository, meanwhile we use the development repository (https://github.com/mmai/nixpkgs )
-
-The following process shows how to deploy Funkwhale locally on a VirtualBox virtual machine.
-
 ## Prepare local environment 
+
+Get this repository
 
 ```bash
 git clone https://github.com/mmai/funkwhale-nixos.git
 cd funkwhale-nixos
-nix-shell
 ```
 
-## Install _NixOps_ deployment tool
+Install [Nix](https://nixos.org/nix/) and bootstrap an environment with Funkwhale packages and the _nixops_ deployment tool :
 
-```bash
+```
+curl https://nixos.org/nix/install | sh
+nix-shell
 nixenv -i nixops
 ```
 
-## Configure VirtualBox
+The Funkwhale packages are yet merged in the official NixOS repository, meanwhile we tell _nix-shell_ to use the maintainer repository (https://github.com/mmai/nixpkgs )
 
-If you want to test on Virtualbox, you need it installed (of course) and started.
+## Set up deployment target
+
+Here are instructions to set up the deployment depending on the targeted server.
+
+You may want to test a local deployment on a virtual machine first, see the following Virtualbox section. 
+
+### VirtualBox
+
+VirtualBox should be installed (of course) and started.
 
 The vboxnet0 network has to exist - you can add it in the VirtualBox general settings under Networks - Host-only Networks if necessary.
-
-## Initiate deployment
 
 ```bash
 nixops create ./deploy/logical.nix ./deploy/physical/virtualbox.nix -d funkwhale
 ```
+
+### Amazon Web Services
+
+TODO
+
+### Hetzner VPS
+
+TODO
 
 ## Deploy
 
