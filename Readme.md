@@ -3,8 +3,8 @@
 An example of how to deploy [Funkwhale](https://funkwhale.audio/) with NixOS and [NixOps](https://nixos.org/nixops/).
 
 This uses the Funkwhale package and module for NixOS, of which I am the maintainer. If you want to take a look, they are defined at the following path in NixOS packages repository:
-- [pkgs/servers/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/master/pkgs/servers/web-apps/funkwhale)
-- [nixos/modules/services/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/master/nixos/modules/services/web-apps/funkwhale)
+- [pkgs/servers/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/funkwhale/pkgs/servers/web-apps/funkwhale)
+- [nixos/modules/services/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/funkwhale/nixos/modules/services/web-apps/funkwhale)
 
 ## Prepare local environment 
 
@@ -40,7 +40,7 @@ You may want to test a local deployment on a virtual machine first, see the foll
 
 ### VirtualBox
 
-[VirtualBox](https://www.virtualbox.org/) should be installed (of course) and started.
+Make sure [VirtualBox](https://www.virtualbox.org/) is installed.
 
 The _vboxnet0_ network has to exist - you can add it in the VirtualBox general settings under _Networks - Host-only Networks_ if necessary.
 
