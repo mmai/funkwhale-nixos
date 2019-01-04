@@ -5,16 +5,14 @@ let
 
   # Use a specific version of nixpkgs:
   # cf. https://nixos.wiki/wiki/FAQ/Pinning_Nixpkgs
-  #   Commit hash as of 2019-01-01
+  #   Commit hash as of 2019-01-04
   #   `git ls-remote https://github.com/mmai/nixpkgs master`
-  rev = "23831cbfa8ca3e27b340090bb96cbbd11557bd9b";
+  rev = "f3bd9d0b9f6517f1ef6b018e8ee7cd2b397a302b";
   pkgsSrc = builtins.fetchGit {
-    # Descriptive name to make the store path easier to identify
-    name = "nixpkgs-funkwhale-2019-01-01";
     url = https://github.com/mmai/nixpkgs;
     rev = rev;
   };
-  
+
   # Patch top-level/default.nix on nixos-unstable (cf. bug https://github.com/NixOS/nixpkgs/issues/51858)
   pkgs = let
     hostPkgs = (import pkgsSrc {});
