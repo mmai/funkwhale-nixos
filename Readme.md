@@ -58,11 +58,35 @@ Set up an account on AWS. Copy your AWS access key and private key in ~/.ac2-key
 youraccesskey yoursecretkey
 ```
 
-On the AWS console, change settings for the default security group and allow ssh inbound.
+On the AWS console, change settings for the default security group and allow ssh, http/https  inbound outbound.
 
-### Hetzner VPS
+Set the _accessKey_ and _region_ parameters in the _./deploy/physical/ec2.nix_ file.
 
-TODO
+Then create the deployment configuration with :
+
+```bash
+nixops create ./deploy/logical.nix ./deploy/physical/ec2.nix -d funkwhale
+```
+### Hetzner Cloud
+
+Hetzner provides a NixOS ISO image, but it is not available at system creation.
+
+- Create a server on Hetzner Cloud, you can choose a Ubuntu image and the cheap CX11 type at less than 3€/month.
+- From the console, mount a NixOS ISO image on it, reboot and follow the NixOS installation process via the console. That will replace the Ubuntu system by NixOS. 
+- add your ssh key to /etc/nixo/configuration.nix so that you and the _nixops_ command can connect. This is the hard part, because copy&paste doesn't work in the console! The easiest way I found was to publish my public keys on a web page (you can create a gist for example) and to get the content from the server with curl.
+- copy the _/etc/nixos/hardware-configuration.nix_ and _/etc/nixos/configuration.nix_ files from your server to _./deploy/physical/hetzner/_
+- reboot your server and test that you can connect via ssh.
+- copy the IP of your server to _deploy/physical/nixos-hetzner.nix_
+
+Then create the deployment configuration with :
+
+```bash
+nixops create ./deploy/logical.nix ./deploy/physical/nixos-hetzner.nix -d funkwhale
+```
+
+### Others
+
+See https://nixos.org/nixops/manual/
 
 ## Deploy
 
