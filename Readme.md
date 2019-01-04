@@ -2,7 +2,7 @@
 
 An example of how to deploy [Funkwhale](https://funkwhale.audio/) with NixOS and [NixOps](https://nixos.org/nixops/).
 
-This uses the Funkwhale package and module, of which I am the maintainer. If you want to take a look, they are defined at the following path in NixOS packages repository:
+This uses the Funkwhale package and module for NixOS, of which I am the maintainer. If you want to take a look, they are defined at the following path in NixOS packages repository:
 - [pkgs/servers/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/master/pkgs/servers/web-apps/funkwhale)
 - [nixos/modules/services/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/master/nixos/modules/services/web-apps/funkwhale)
 
