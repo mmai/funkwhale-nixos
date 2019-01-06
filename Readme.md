@@ -69,14 +69,87 @@ nixops create ./deploy/logical.nix ./deploy/physical/ec2.nix -d funkwhale
 ```
 ### Hetzner Cloud
 
-Hetzner provides a NixOS ISO image, but it is not available at system creation.
+1. Server creation
 
-- Create a server on Hetzner Cloud, you can choose a Ubuntu image and the cheap CX11 type at less than 3€/month.
-- From the console, mount a NixOS ISO image on it, reboot and follow the NixOS installation process via the console. That will replace the Ubuntu system by NixOS. 
-- add your ssh key to /etc/nixo/configuration.nix so that you and the _nixops_ command can connect. This is the hard part, because copy&paste doesn't work in the console! The easiest way I found was to publish my public keys on a web page (you can create a gist for example) and to get the content from the server with curl.
-- copy the _/etc/nixos/hardware-configuration.nix_ and _/etc/nixos/configuration.nix_ files from your server to _./deploy/physical/hetzner/_
-- reboot your server and test that you can connect via ssh.
-- copy the IP of your server to _deploy/physical/nixos-hetzner.nix_
+  - Go to https://www.hetzner.com/cloud and create an account if you don't have one
+  - Create a new project 
+  - Add a server on this project, choose the defaults : ubuntu 18.04, small instance, create & buy
+  - once the server is created, go to its page select mount an ISO image, choose "NixOS" and mount.
+  - open a terminal and copy your public ssh key to the server using the IP and credentials you received by mail (do `ssh-keygen` if you don't already have a ssh public key) : `ssh-copy-id root@XX.XX.XX.XX`
+  - On the Hetzner dashboard, open the console (top right button next to the lock ) and log in with the credentials your received by mail (beware, its a _qwerty_ keyboard!) and reboot in order to start the NixOS installer.
+
+2. NixOS installation
+
+  First we copy our public key in a safe place, we will need it later 
+  ```
+  cp /mnt/root/.ssh/authorized_keys /root/
+  ```
+
+   We follow the instructions from https://nixos.org/nixos/manual/index.html#sec-installation legacy Boot (MBR), and a 2GiB swap partition :
+
+   Create a MBR partition table, add root and swap partitions : lauch `parted /dev/sda` and inside parted type :
+    
+    mklabel msdos
+    mkpart primary 1MiB -2GiB
+    mkpart primary linux-swap -2GiB 100%
+    q
+   
+   Initialize partitions
+
+     mkfs.ext4 -L nixos /dev/sda1
+     mkswap -L swap /dev/sda2
+
+
+  Configure nixos system
+
+    mount /dev/disk/by-label/nixos /mnt
+    swapon /dev/sda2
+    nixos-generate-config --root /mnt
+    cat ./authorized_keys » /mnt/etc/nixos/configuration.nix # copy our ssh public key at the end of the configuration file
+    nano /mnt/etc/nixos/configuration.nix
+
+  In _configuration.nix_ :
+    - uncomment the `boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only` line
+    - you can change your language and keyboard layout in the _i18n_ section
+    - add the following lines before the closing bracket, replacing `sh-rsa xxxxx you@desktop` by your public key that we copied at the end of the file the step before with the `cat` command  (and remove that last line after that, the file should end with the closing bracket ) :
+    ```
+  users.users.root.openssh.authorizedKeys.keys = [
+      "sh-rsa xxxxxx  you@desktop"
+  ];
+
+  networking.firewall.allowedTCPPorts = [ 22 ];
+  services.openssh.enable = true;
+  ```
+
+  And the last step :
+  ```
+  nixos-install
+  ```
+  Wait for installation, enter a new root password when prompted.
+  Before rebooting, go to the Hetzner console and unmount the NixOS ISO image. Then you can reboot 
+  ```
+  reboot
+  ```
+
+3. Deployment configuration
+
+After rebooting your server, ensure that you are able to connect to it via ssh without needing password :
+```
+ssh root@XX.XX.XX.XX
+exit
+```
+
+If it works, you can copy its configuration to your local machine :
+```
+cd deploy/hetzner
+scp root@XX.XX.XX.XX:/etc/nixos/configuration.nix .
+scp root@XX.XX.XX.XX:/etc/nixos/hardware-configuration.nix .
+cd ../..
+```
+
+Edit _physical/nixos-hetzner.nix_ file and set your server IP adress in the `deployment.targetHost` line.
+
+Edit the main _configuration.nix_ file and replace `funkwhale.local` by the domain name you want, you will need to associate this domain to the IP adress of your server (or you can edit your local _/etc/hosts_ file to test it)
 
 Then create the deployment configuration with :
 
