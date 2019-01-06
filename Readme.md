@@ -80,53 +80,58 @@ nixops create ./deploy/logical.nix ./deploy/physical/ec2.nix -d funkwhale
 
 2. NixOS installation
 
-  First we copy our public key in a safe place, we will need it later 
+First we copy our public key in a safe place, we will need it later 
   ```
   cp /mnt/root/.ssh/authorized_keys /root/
   ```
 
-   We follow the instructions from https://nixos.org/nixos/manual/index.html#sec-installation legacy Boot (MBR), and a 2GiB swap partition :
+We follow the instructions from https://nixos.org/nixos/manual/index.html#sec-installation legacy Boot (MBR), and a 2GiB swap partition :
 
-   Create a MBR partition table, add root and swap partitions : lauch `parted /dev/sda` and inside parted type :
+Create a MBR partition table, add root and swap partitions : lauch `parted /dev/sda` and inside parted type :
     
     mklabel msdos
     mkpart primary 1MiB -2GiB
     mkpart primary linux-swap -2GiB 100%
     q
    
-   Initialize partitions
+Initialize partitions
 
      mkfs.ext4 -L nixos /dev/sda1
      mkswap -L swap /dev/sda2
 
 
-  Configure nixos system
+Configure nixos system
 
     mount /dev/disk/by-label/nixos /mnt
     swapon /dev/sda2
     nixos-generate-config --root /mnt
-    cat ./authorized_keys » /mnt/etc/nixos/configuration.nix # copy our ssh public key at the end of the configuration file
+    cat ./authorized_keys >> /mnt/etc/nixos/configuration.nix # copy our ssh key to the conf file
     nano /mnt/etc/nixos/configuration.nix
 
-  In _configuration.nix_ :
-    - uncomment the `boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only` line
-    - you can change your language and keyboard layout in the _i18n_ section
-    - add the following lines before the closing bracket, replacing `sh-rsa xxxxx you@desktop` by your public key that we copied at the end of the file the step before with the `cat` command  (and remove that last line after that, the file should end with the closing bracket ) :
-    ```
-  users.users.root.openssh.authorizedKeys.keys = [
+In configuration.nix :
+    
+   - uncomment the `boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only` line
+   - you can change your language and keyboard layout in the _i18n_ section
+   - add the following lines before the closing bracket, replacing `sh-rsa xxxxx you@desktop` by your public key that we copied at the end of the file the step before with the `cat` command  (and remove that last line after that, the file should end with the closing bracket ) :
+   
+   ``` 
+    users.users.root.openssh.authorizedKeys.keys = [
       "sh-rsa xxxxxx  you@desktop"
-  ];
+    ];
 
-  networking.firewall.allowedTCPPorts = [ 22 ];
-  services.openssh.enable = true;
+    networking.firewall.allowedTCPPorts = [ 22 ];
+    services.openssh.enable = true;
   ```
 
-  And the last step :
+And the last step :
+  
   ```
   nixos-install
   ```
-  Wait for installation, enter a new root password when prompted.
-  Before rebooting, go to the Hetzner console and unmount the NixOS ISO image. Then you can reboot 
+  
+Wait for installation, enter a new root password when prompted.
+Before rebooting, go to the Hetzner console and unmount the NixOS ISO image. Then you can reboot 
+  
   ```
   reboot
   ```
