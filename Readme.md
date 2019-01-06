@@ -73,12 +73,14 @@ nixops create ./deploy/logical.nix ./deploy/physical/ec2.nix -d funkwhale
 
   - Go to https://www.hetzner.com/cloud and create an account if you don't have one
   - Create a new project 
+  - Click on _Access_ and add your public ssh key (you can create one with the `ssh-keygen` command)
   - Add a server on this project, choose the defaults : ubuntu 18.04, small instance, create & buy
   - once the server is created, go to its page select mount an ISO image, choose "NixOS" and mount.
-  - open a terminal and copy your public ssh key to the server using the IP and credentials you received by mail (do `ssh-keygen` if you don't already have a ssh public key) : `ssh-copy-id root@XX.XX.XX.XX`
-  - On the Hetzner dashboard, open the console (top right button next to the lock ) and log in with the credentials your received by mail (beware, its a _qwerty_ keyboard!) and reboot in order to start the NixOS installer.
+  - Connect with ssh (you should'nt need a password if you added your public ssh key), and change the root password, the current password was sent by mail at the server creation. Then reboot to start the NixOS installer.
 
 2. NixOS installation
+
+On the Hetzner dashboard, open the console (top right button next to the lock ) and log in with the password you just set (beware, its a _qwerty_ keyboard!).
 
 First we copy our public key in a safe place, we will need it later 
   ```
