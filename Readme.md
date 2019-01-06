@@ -8,21 +8,21 @@ This uses the Funkwhale package and module for NixOS, of which I am the maintain
 
 ## Prepare local environment 
 
-1. Get this repository
-
-  ```bash
-  git clone https://github.com/mmai/funkwhale-nixos.git
-  cd funkwhale-nixos
-  ```
-
-2. Install [Nix](https://nixos.org/nix/)
+1. Install [Nix](https://nixos.org/nix/)
 
   ```
   curl https://nixos.org/nix/install | sh
   ```
 
   Logout an login again to have the correct environment variables.
+  
+2. Get this repository
 
+  ```bash
+  git clone https://github.com/mmai/funkwhale-nixos.git
+  cd funkwhale-nixos
+  ```
+  
 3. Bootstrap an environment with Funkwhale packages and the _nixops_ deployment tool (the Funkwhale packages are not yet merged in the official NixOS repository, meanwhile the maintainer repository is configured in _shell.nix_) :
 
   ```
