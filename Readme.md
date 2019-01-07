@@ -69,6 +69,8 @@ nixops create ./deploy/logical.nix ./deploy/physical/ec2.nix -d funkwhale
 ```
 ### Hetzner Cloud
 
+Here is a video of the process https://www.youtube.com/watch?v=YUfv3JFwHe0 , or you can follow the instructions below.
+
 1. Server creation
 
   - Go to https://www.hetzner.com/cloud and create an account if you don't have one
