@@ -73,18 +73,22 @@ nixops create ./deploy/logical.nix ./deploy/physical/ec2.nix -d funkwhale
 
   - Go to https://www.hetzner.com/cloud and create an account if you don't have one
   - Create a new project 
-  - Click on _Access_ and add your public ssh key (you can create one with the `ssh-keygen` command)
   - Add a server on this project, choose the defaults : ubuntu 18.04, small instance, create & buy
   - once the server is created, go to its page select mount an ISO image, choose "NixOS" and mount.
-  - Connect with ssh (you should'nt need a password if you added your public ssh key), and change the root password, the current password was sent by mail at the server creation. Then reboot to start the NixOS installer.
+  - Connect via ssh with the password sent by mail at the server creation. You will be asked to change this password. So do it and disconnect.
+  - copy your public ssh key to the server (you can create one by doing `ssh-keygen`) : `ssh-copy-id root@XX.XX.XX.XX`.
+  - connect again, you should be able to do so without entering your password. Then reboot to boot on the NixOS ISO image and start the installer.
 
 2. NixOS installation
 
-On the Hetzner dashboard, open the console (top right button next to the lock ) and log in with the password you just set (beware, its a _qwerty_ keyboard!).
+On the Hetzner dashboard, open the console (top right button next to the lock ). Wait for the NixOS image to boot, you will be directly connected as root. 
+If your keyboard is not _qwerty_, you can change the keyboard layout with _loadkeys_, for a french _azerty_ keyboard, type `loadkeys fr`.
 
 First we copy our public key in a safe place, we will need it later 
   ```
+  mount /dev/sda1 /mnt
   cp /mnt/root/.ssh/authorized_keys /root/
+  unmount /mnt
   ```
 
 We follow the instructions from https://nixos.org/nixos/manual/index.html#sec-installation legacy Boot (MBR), and a 2GiB swap partition :
