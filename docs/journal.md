@@ -112,10 +112,52 @@ git checkout funkwhale && git merge master
 
 Edition de _shell.nix_ : `pkgsSrc = /home/henri/travaux/nixpkgs`
 
-tester le déploiement avec : 
+**Tester le déploiement avec** : 
 ```
-nix-shell --run "nixops deploy -d funkwhale"
+nix-shell --run "nixops deploy -d vbox-funkwhale"
 ```
 
+**Tester package :**
+
+**Tester module :**
+
+## Retours pull request
+
+Pkg :
+  TODO
+  TOTEST
+  DONE
+    import 
+    conserve behavior
+  
+Module :
+  WAIT FOR RESPONSE
+    meta module
+  TODO
+    requirements.nix
+    doc mails
+    enclose description doc => generate doc
+    link to upstream doc
+    config ssl + suppr comments ssl
+    convert aussi "/media/".alias = "${cfg.api.mediaRoot}/"; ?
+    systemd.tmpfiles.rules
+    raven option
+    FUNKWHALE_FRONTEND_PATH=/srv/funkwhale/front/dist ??? => creation dans nixos_funkwhale ...
+
+  TOTEST
+    RuntimeDirectory
+    inline funkwhale.env
+    camelcase
+    types.port
+    description end with .
+    types.enum
+    fromEmail : not a default
+    domain :not a default
+    allowed_domain :not a default
+    secret :not a default
+    delete recommendedNginx options
+    alias = cfg.api.mediaRoot;
+  DONE
+  
 
 
