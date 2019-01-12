@@ -120,6 +120,7 @@ nix-shell --run "nixops deploy -d vbox-funkwhale"
 **Tester package :**
 
 **Tester module :**
+  documentation : `cd nixos ; nix-build release.nix -A manual.x86_64-linux ; firefox result/share/doc/nixos/options.html `
 
 ## Retours pull request
 
@@ -131,20 +132,20 @@ Pkg :
     conserve behavior
   
 Module :
-  WAIT FOR RESPONSE
-    meta module
   TODO
     requirements.nix
-    doc mails
-    enclose description doc => generate doc
-    link to upstream doc
-    config ssl + suppr comments ssl
-    convert aussi "/media/".alias = "${cfg.api.mediaRoot}/"; ?
     systemd.tmpfiles.rules
+
+    convert aussi "/media/".alias = "${cfg.api.mediaRoot}/"; ?
     raven option
+    config ssl + suppr comments ssl
     FUNKWHALE_FRONTEND_PATH=/srv/funkwhale/front/dist ??? => creation dans nixos_funkwhale ...
 
+    Configs séparées pour psql, redis ...
+
   TOTEST
+  DONE
+    meta module
     RuntimeDirectory
     inline funkwhale.env
     camelcase
@@ -157,7 +158,9 @@ Module :
     secret :not a default
     delete recommendedNginx options
     alias = cfg.api.mediaRoot;
-  DONE
+    doc mails
+    enclose description doc => generate doc
+    link to upstream doc
   
 
 
