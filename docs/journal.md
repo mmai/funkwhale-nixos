@@ -134,9 +134,7 @@ Pkg :
 Module :
   TODO
     requirements.nix
-    systemd.tmpfiles.rules
 
-    convert aussi "/media/".alias = "${cfg.api.mediaRoot}/"; ?
     raven option
     config ssl + suppr comments ssl
     FUNKWHALE_FRONTEND_PATH=/srv/funkwhale/front/dist ??? => creation dans nixos_funkwhale ...
@@ -144,6 +142,8 @@ Module :
     Configs séparées pour psql, redis ...
 
   TOTEST
+    systemd.tmpfiles.rules -> tester avec config différente (home dir, etc.)
+    convert aussi "/media/".alias = "${cfg.api.mediaRoot}/"; ?
   DONE
     meta module
     RuntimeDirectory

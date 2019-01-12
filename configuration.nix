@@ -16,20 +16,6 @@ with pkgs;
     };
   };
 
-  users.extraUsers.funkwhale = {
-    createHome = true;
-    isNormalUser = true;
-    home = "/srv/funkwhale";
-    description = "Funkwhale server user";
-  };
-
-  # We use the default location in /srv/funkwhale, so we need to make it accessible
-  system.activationScripts.enableHomeDirsInSrv = ''
-        if ! test -e /srv; then
-           mkdir /srv 
-        fi
-        chmod a+x /srv 
-      '';
   # Overrides default 30M
   services.nginx.clientMaxBodySize = "40m";
 
