@@ -135,15 +135,9 @@ Module :
   TODO
     requirements.nix
 
-    raven option
-    config ssl + suppr comments ssl
-    FUNKWHALE_FRONTEND_PATH=/srv/funkwhale/front/dist ??? => creation dans nixos_funkwhale ...
-
-    Configs séparées pour psql, redis ...
+    Configs séparées pour psql, redis, api... (ou supprimer les options de config)
 
   TOTEST
-    systemd.tmpfiles.rules -> tester avec config différente (home dir, etc.)
-    convert aussi "/media/".alias = "${cfg.api.mediaRoot}/"; ?
   DONE
     meta module
     RuntimeDirectory
@@ -161,6 +155,10 @@ Module :
     doc mails
     enclose description doc => generate doc
     link to upstream doc
+    systemd.tmpfiles.rules -> tester avec config différente (home dir, etc.)
+    convert aussi "/media/".alias = "${cfg.api.mediaRoot}/"; ?
+    raven option
+    config ssl + suppr comments ssl
   
 
 
