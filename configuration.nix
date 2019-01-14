@@ -10,7 +10,6 @@ with pkgs;
     defaultFromEmail = "noreply@funkwhale.local";
     protocol = "http"; # Disable https for local tests
     api = {
-      djangoAllowedHosts = "funkwhale.local";
       # Generate one using `openssl rand -base64 45`, for example
       djangoSecretKey = "i1vh21SWg1CEyM5KJILxn4aE1jEhvbF9XSxsT8chovgJll1v54VsH0X3AGsJ";
     };
