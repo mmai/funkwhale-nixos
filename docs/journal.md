@@ -119,46 +119,8 @@ nix-shell --run "nixops deploy -d vbox-funkwhale"
 
 **Tester package :**
 
+`nix-build ~/travaux/nixpkgs -A python37Packages.hiredis`
+
 **Tester module :**
   documentation : `cd nixos ; nix-build release.nix -A manual.x86_64-linux ; firefox result/share/doc/nixos/options.html `
-
-## Retours pull request
-
-Pkg :
-  TODO
-  TOTEST
-  DONE
-    import 
-    conserve behavior
-  
-Module :
-  TODO
-    requirements.nix
-
-    Configs séparées pour psql, redis, api... (ou supprimer les options de config)
-
-  TOTEST
-  DONE
-    meta module
-    RuntimeDirectory
-    inline funkwhale.env
-    camelcase
-    types.port
-    description end with .
-    types.enum
-    fromEmail : not a default
-    domain :not a default
-    allowed_domain :not a default
-    secret :not a default
-    delete recommendedNginx options
-    alias = cfg.api.mediaRoot;
-    doc mails
-    enclose description doc => generate doc
-    link to upstream doc
-    systemd.tmpfiles.rules -> tester avec config différente (home dir, etc.)
-    convert aussi "/media/".alias = "${cfg.api.mediaRoot}/"; ?
-    raven option
-    config ssl + suppr comments ssl
-  
-
 

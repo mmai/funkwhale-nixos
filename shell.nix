@@ -4,9 +4,9 @@ let
 
   # Use a specific version of nixpkgs:
   # cf. https://nixos.wiki/wiki/FAQ/Pinning_Nixpkgs
-  #   Commit hash as of 2019-01-04
+  #   Commit hash as of 2019-01-28
   #   `git ls-remote https://github.com/mmai/nixpkgs funkwhale`
-  # rev = "d29cdfa12a804dc4ad54d3e64fd0266083ee726e";
+  # rev = "69c6ba8b5bcb47fec423ca1d296b7613d50d6801";
   # pkgsSrc = builtins.fetchGit {
   #   url = https://github.com/mmai/nixpkgs;
   #   ref = "funkwhale";

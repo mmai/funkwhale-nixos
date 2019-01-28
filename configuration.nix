@@ -16,7 +16,7 @@ with pkgs;
   };
 
   # Overrides default 30M
-  services.nginx.clientMaxBodySize = "40m";
+  services.nginx.clientMaxBodySize = "100m";
 
   services.fail2ban.enable = true;
   time.timeZone = "Europe/Paris";

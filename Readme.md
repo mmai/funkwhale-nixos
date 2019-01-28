@@ -90,12 +90,12 @@ First we copy our public key in a safe place, we will need it later
   ```
   mount /dev/sda1 /mnt
   cp /mnt/root/.ssh/authorized_keys /root/
-  unmount /mnt
+  umount /mnt
   ```
 
 We follow the instructions from https://nixos.org/nixos/manual/index.html#sec-installation legacy Boot (MBR), and a 2GiB swap partition :
 
-Create a MBR partition table, add root and swap partitions : lauch `parted /dev/sda` and inside parted type :
+Create a MBR partition table, add root and swap partitions : launch `parted /dev/sda` and inside parted type :
     
     mklabel msdos
     mkpart primary 1MiB -2GiB
@@ -146,7 +146,7 @@ Before rebooting, go to the Hetzner console and unmount the NixOS ISO image. The
 
 3. Deployment configuration
 
-After rebooting your server, ensure that you are able to connect to it via ssh without needing password :
+After rebooting your server, ensure that you are able to connect to it via ssh without needing a password :
 ```
 ssh root@XX.XX.XX.XX
 exit
@@ -154,7 +154,7 @@ exit
 
 If it works, you can copy its configuration to your local machine :
 ```
-cd deploy/hetzner
+cd deploy/physical/hetzner
 scp root@XX.XX.XX.XX:/etc/nixos/configuration.nix .
 scp root@XX.XX.XX.XX:/etc/nixos/hardware-configuration.nix .
 cd ../..
