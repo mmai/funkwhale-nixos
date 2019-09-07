@@ -6,7 +6,7 @@ let
   # cf. https://nixos.wiki/wiki/FAQ/Pinning_Nixpkgs
   #   Commit hash as of 2019-06-14
   #   `git ls-remote https://github.com/mmai/nixpkgs funkwhale`
-  rev = "8f2a49c652902058c0a8731106955deade8910b6";
+  rev = "3f3490063dee41ab6da51f18634e42ca1df7cbf9";
   pkgsSrc = builtins.fetchGit {
     url = https://github.com/mmai/nixpkgs;
     ref = "funkwhale";
