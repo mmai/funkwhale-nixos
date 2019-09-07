@@ -37,7 +37,7 @@ Edit module in `nixos/modules/services/web-apps/funkwhale/`
 
 Look for requirements changes ( ex : `git diff 0.18 0.19.0 -- api/requirements/base.txt`)
 * system packages in api/requirements.apt
-* python packages in api/requirements/base.txt (add missing requirements, then change versions by testing)
+* python packages in api/requirements/base.txt (add missing requirements, then change versions by testing, don't forget to add new python modules in _pkgs/top-level/python-packages.nix_)
 
 
 Edit pkg in `pkgs/servers/web-apps/funkwhale/`
@@ -47,9 +47,10 @@ Edit pkg in `pkgs/servers/web-apps/funkwhale/`
 
 ## Tests
 
-Test package :
+Test packages :
 
 `nix-build . -A funkwhale`
+`nix-build . -A python36Packages.unicode-slugify`
 
 Test module documentation :
 ```
