@@ -177,8 +177,10 @@ See https://nixos.org/nixops/manual/
 ## Deploy
 
 ```
-nixops deploy -d funkwhale
+nixops deploy -d funkwhale --allow-reboot
 ```
+
+(you can remove `--allow-reboot` if you want to reboot manually)
 
 If you get an error `Exception: unable to activate new configuration` related to _virtualbox.service_, you can force deployment like this: 
 

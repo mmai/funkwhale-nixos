@@ -2,12 +2,19 @@
 
 with pkgs;
 
+let funkwhaleHost = "funkwhale.local";
+in
 { 
+  networking.extraHosts =
+    ''
+    127.0.0.1 ${funkwhaleHost}
+    '';
+
   # See nixos/modules/services/web-apps/funkwhale.nix for all available options
   services.funkwhale = {
     enable = true;
-    hostname = "funkwhale.local";
-    defaultFromEmail = "noreply@funkwhale.local";
+    hostname = funkwhaleHost;
+    defaultFromEmail = "noreply@${funkwhaleHost}";
     protocol = "http"; # Disable https for local tests
     api = {
       # Generate one using `openssl rand -base64 45`, for example
@@ -23,5 +30,5 @@ with pkgs;
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
   # The NixOS release to be compatible with for stateful data such as databases.
-  system.stateVersion = "19.03";
+  system.stateVersion = "19.09";
 }
