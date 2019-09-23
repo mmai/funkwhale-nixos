@@ -10,3 +10,10 @@ test:
 	nixops deploy -d funkwhale-vbox --allow-reboot
 	sleep 90
 	nixops ssh -d funkwhale-vbox funkwhale -t "cd /srv/funkwhale && sudo --user=funkwhale sh -c './createSuperUser.sh'"
+testmodule:
+	nixos-rebuild build-vm --fast -I nixos-config=./configuration.nix -I nixpkgs=~/travaux/nixpkgs
+test2machines:
+	nixops destroy -d funkwhale2machines-vbox
+	nixops delete -d funkwhale2machines-vbox
+	nixops create ./deploy/logical2machines.nix ./deploy/physical/virtualbox2machines.nix -d funkwhale2machines-vbox
+	nixops deploy -d funkwhale2machines-vbox --allow-reboot
