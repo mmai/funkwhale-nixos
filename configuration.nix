@@ -30,5 +30,5 @@ in
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
   # The NixOS release to be compatible with for stateful data such as databases.
-  system.stateVersion = "19.09";
+  system.stateVersion = "20.03";
 }

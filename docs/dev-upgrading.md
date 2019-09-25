@@ -15,7 +15,7 @@ Sync repo :
 ```
 git fetch upstream
 git checkout master & git merge upstream/master
-git checkout funkwhale & git merge master
+git checkout funkwhale & git rebase master
 ```
 
 (if it's a fix after a review : rebase, then force push (cf. https://nixos.org/nixpkgs/manual/#submitting-changes-commit-policy))
