@@ -1,8 +1,10 @@
 # Funkwhale on NixOS
 
+**NOTE: for a more up to date Funkwhale configuration with nix flakes, see [mmai/funkwhale-flake](https://github.com/mmai/funkwhale-flake)**
+
 An example of how to deploy [Funkwhale](https://funkwhale.audio/) with NixOS and [NixOps](https://nixos.org/nixops/).
 
-This uses the Funkwhale package and module for NixOS, of which I am the maintainer. If you want to take a look, they are defined at the following path in NixOS packages repository:
+This uses the Funkwhale package and module for NixOS. If you want to take a look, they are defined at the following path in NixOS packages repository:
 - [pkgs/servers/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/funkwhale/pkgs/servers/web-apps/funkwhale)
 - [nixos/modules/services/web-apps/funkwhale](https://github.com/mmai/nixpkgs/tree/funkwhale/nixos/modules/services/web-apps/funkwhale.nix)
 
@@ -23,7 +25,7 @@ This uses the Funkwhale package and module for NixOS, of which I am the maintain
   cd funkwhale-nixos
   ```
   
-3. Bootstrap an environment with Funkwhale packages and the _nixops_ deployment tool (the Funkwhale packages are not yet merged in the official NixOS repository, meanwhile the maintainer repository is configured in _shell.nix_) :
+3. Bootstrap an environment with Funkwhale packages and the _nixops_ deployment tool (the Funkwhale packages are not merged in the official NixOS repository, the custom funkwhale repository is configured in _shell.nix_) :
 
   ```
   nix-shell
